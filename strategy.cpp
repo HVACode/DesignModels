@@ -57,29 +57,24 @@ class CashContext
 public:
 	CashContext(std::string type);
 	double GetResult(double money);
-	~CashContext()
-	{
-		delete m_CashSuper;
-		m_CashSuper = nullptr;
-	}
 
 private:
-	CashSuper *m_CashSuper;
+	std::unique_ptr<CashSuper> m_CashSuper;
 };
 
 CashContext::CashContext(std::string type)
 {
 	if ("正常收费" == type)
 	{
-		m_CashSuper = new CashNormal();
+		m_CashSuper = std::make_unique<CashNormal>();
 	}
 	else if ("满300返100" == type)
 	{
-		m_CashSuper = new CashReturn(300, 100);
+		m_CashSuper = std::make_unique<CashReturn>(300.0, 100.0);
 	}
 	else if ("打8折" == type)
 	{
-		m_CashSuper = new CashRebate(0.8);
+		m_CashSuper = std::make_unique<CashRebate>(0.8);
 	}
 }
 double CashContext::GetResult(double money)
